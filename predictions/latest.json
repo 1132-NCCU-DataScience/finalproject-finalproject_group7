@@ -1,9 +1,9 @@
 {
   "model_version": "xgb_test_v1",
   "update_time": "2026-05-19T23:00:21.307517+08:00",
-  "last_attempt_at": "2026-05-19T23:00:21.307517+08:00",
+  "last_attempt_at": "2026-05-19T23:00:25.465190+08:00",
   "last_success_at": "2026-05-19T23:00:21.307517+08:00",
-  "health_status": "ok",
+  "health_status": "stale",
   "n_stations": 2,
   "predictions": [
     {
