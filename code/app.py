@@ -4,9 +4,10 @@ import requests
 import folium
 import pandas as pd
 import time
+import json
 from datetime import datetime
 
-DATA_URL = "https://raw.githubusercontent.com/YOUR_USER/YOUR_REPO/main/predictions/latest.json"
+DATA_URL = "https://raw.githubusercontent.com/1132-NCCU-DataScience/finalproject-finalproject_group7/main/predictions/latest.json"
 
 app_ui = ui.page_fluid(
     ui.h2("YouBike 缺車熱點即時預測與調度地圖"),
@@ -17,14 +18,17 @@ app_ui = ui.page_fluid(
 )
 
 def server(input, output, session):
-    
-    @reactive.poll(
-        poll_func=lambda: int(time.time() / 60), 
-        value_func=lambda: requests.get(DATA_URL).json()
-    )
+    @reactive.poll(lambda: int(time.time() / 5))
     def fetch_latest_data():
-        """Send GET request to fetch the latest inference results"""
-        pass  # Implementation is defined in the arguments of reactive.poll
+        """Read the latest inference results from local JSON"""
+        import json
+        with open("predictions/latest.json", "r", encoding="utf-8") as f:
+            return json.load(f)
+    
+    # @reactive.poll(lambda: int(time.time() / 60))
+    # def fetch_latest_data():
+    #     """Send GET request to fetch the latest inference results"""
+    #     return requests.get(DATA_URL).json()
 
     @render.ui
     def status_banner():
