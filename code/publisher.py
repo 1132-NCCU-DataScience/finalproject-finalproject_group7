@@ -83,7 +83,7 @@ def save_latest_json_local(
         json.dump(output_payload, f, ensure_ascii=False, indent=2)
     logger.info(f"[Publisher] Successfully saved local JSON to {json_path} (Status: {health_status})")
 
-    # _git_commit_and_push(repo_path)
+    _git_commit_and_push(output_path.parent)
     return json_path
 
 def _git_commit_and_push(repo_path: str, max_retries: int = 2):
