@@ -34,6 +34,7 @@ from m3.build_features import (
     validate_features,
 )
 from m4.predictor import ShortagePredictor
+from publisher import save_latest_json_local
 
 
 
@@ -622,8 +623,23 @@ def run_once() -> None:
 
         print("[model] predicting current shortage probability...")
         pred_df = predict_current(current_features)
+        
+        lisa_cols = lisa_current[["sno", "moran_type", "moran_p_value"]].copy()
+        lisa_cols["sno"] = lisa_cols["sno"].astype(str)
+        pred_df = pred_df.merge(lisa_cols, on="sno", how="left")
+
+        loc_cols = current_df[["sno", "lat", "lng"]].copy()
+        loc_cols["sno"] = loc_cols["sno"].astype(str)
+        pred_df = pred_df.merge(loc_cols, on="sno", how="left")
 
         save_pending_predictions(pred_df)
+
+        model_ver = pred_df["model_version"].iloc[0] if "model_version" in pred_df.columns else "xgb_v1_20260520"
+        save_latest_json_local(
+            pred_df=pred_df,
+            model_version=model_ver,
+            is_success=True
+        )
 
         print("\n=== Top 20 Current Predicted Risk Stations ===")
         show_cols = [
@@ -647,6 +663,7 @@ def run_once() -> None:
 
     except RuntimeError as e:
         print(f"[feature/model] skipped current prediction: {e}")
+        save_latest_json_local(is_success=False)
 
     report_metrics()
 

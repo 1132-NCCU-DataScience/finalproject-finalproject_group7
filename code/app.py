@@ -13,12 +13,12 @@ app_ui = ui.page_fluid(
     ui.h2("YouBike 缺車熱點即時預測與調度地圖"),
     ui.output_ui("status_banner"),
     ui.card(
-        output_widget("map_view", height="600px")
+        ui.output_ui("map_view")
     )
 )
 
 def server(input, output, session):
-    @reactive.poll(lambda: int(time.time() / 5))
+    @reactive.poll(lambda: int(time.time() / 60))
     def fetch_latest_data():
         """Read the latest inference results from local JSON"""
         import json
@@ -43,7 +43,7 @@ def server(input, output, session):
         else:
             return ui.HTML(f"<div style='color: red; padding: 10px; font-weight: bold;'>🔴 系統異常 | 正在顯示最後一次可用資料 ({update_time})</div>")
 
-    @render_widget
+    @render.ui
     def map_view():
         data = fetch_latest_data()
         df = pd.DataFrame(data["predictions"])
@@ -81,6 +81,6 @@ def server(input, output, session):
                 popup=folium.Popup(popup_html, max_width=300)
             ).add_to(m)
 
-        return m
+        return ui.HTML(m._repr_html_())
 
 app = App(app_ui, server)
