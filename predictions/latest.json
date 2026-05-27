@@ -1,7 +1,7 @@
 {
   "model_version": "xgb_v1_20260520",
   "update_time": "2026-05-26 11:38:00+08:00",
-  "last_attempt_at": "2026-05-27T21:17:22.584446+08:00",
+  "last_attempt_at": "2026-05-27T21:44:38.224960+08:00",
   "last_success_at": "2026-05-26T11:38:43.766249+08:00",
   "health_status": "degraded",
   "n_stations": 1739,
